@@ -45,30 +45,30 @@ if uploaded_file is not None:
             st.dataframe(df)
 
             # Crear un selectbox de múltiples selecciones para las AFORE
-            afore_list = df["AFORE"].unique()
+            afore_list = df["CONSECUTIVO"].unique()
             selected_afore = st.multiselect("Selecciona las AFORE para visualizar:", afore_list, default=afore_list)
 
             # Filtrar el DataFrame con las AFORE seleccionadas
-            filtered_df = df[df["AFORE"].isin(selected_afore)]
+            filtered_df = df[df["CONSECUTIVO"].isin(selected_afore)]
 
             # Crear un DataFrame separado para gráficas de "VALOR_REAL" y "PROYECCION"
             plot_data = pd.DataFrame()
 
             for afore in selected_afore:
-                temp = filtered_df[filtered_df["AFORE"] == afore]
+                temp = filtered_df[filtered_df["CONSECUTIVO"] == afore]
                 real_data = temp.iloc[:5][["FECHA", "VALOR_REAL"]].copy()  # Primeras 5 filas (VALOR_REAL)
                 real_data["TIPO"] = "VALOR_REAL"
                 real_data["VALOR"] = real_data["VALOR_REAL"]
-                real_data["AFORE"] = afore
+                real_data["CONSECUTIVO"] = afore
 
                 projected_data = temp.iloc[5:10][["FECHA", "PROYECCION"]].copy()  # Siguientes 5 filas (PROYECCION)
                 projected_data["TIPO"] = "PROYECCION"
                 projected_data["VALOR"] = projected_data["PROYECCION"]
-                projected_data["AFORE"] = afore
+                projected_data["CONSECUTIVO"] = afore
 
                 # Combinar en el DataFrame para graficar
-                combined_data = pd.concat([real_data[["FECHA", "VALOR", "TIPO", "AFORE"]], 
-                                           projected_data[["FECHA", "VALOR", "TIPO", "AFORE"]]])
+                combined_data = pd.concat([real_data[["FECHA", "VALOR", "TIPO", "CONSECUTIVO"]], 
+                                           projected_data[["FECHA", "VALOR", "TIPO", "CONSECUTIVO"]]])
                 plot_data = pd.concat([plot_data, combined_data])
 
             # Crear gráficos individuales para "VALOR_REAL" y "PROYECCION"
@@ -79,10 +79,10 @@ if uploaded_file is not None:
                     real_data_plot,
                     x="FECHA",
                     y="VALOR",
-                    color="AFORE",
+                    color="CONSECUTIVO",
                     markers=True,
                     labels={"VALOR": "Valor Real", "FECHA": "Fecha"},
-                    title="Valores Reales por AFORE"
+                    title="Valores Reales por CONSECUTIVO"
                 )
                 fig_real.update_layout(xaxis=dict(tickmode='array', tickvals=real_data_plot["FECHA"].unique()))
                 st.plotly_chart(fig_real)
@@ -93,10 +93,10 @@ if uploaded_file is not None:
                     projected_data_plot,
                     x="FECHA",
                     y="VALOR",
-                    color="AFORE",
+                    color="CONSECUTIVO",
                     markers=True,
                     labels={"VALOR": "Proyección", "FECHA": "Fecha"},
-                    title="Proyecciones por AFORE"
+                    title="Proyecciones por CONSECUTIVO"
                 )
                 fig_projected.update_layout(xaxis=dict(tickmode='array', tickvals=projected_data_plot["FECHA"].unique()))
                 st.plotly_chart(fig_projected)
@@ -106,11 +106,11 @@ if uploaded_file is not None:
                     plot_data,
                     x="FECHA",
                     y="VALOR",
-                    color="AFORE",
+                    color="CONSECUTIVO",
                     markers=True,
                     line_dash="TIPO",  # Diferenciar por tipo de línea
                     labels={"VALOR": "Valor", "FECHA": "Fecha"},
-                    title="Datos Reales y Proyecciones por AFORE"
+                    title="Datos Reales y Proyecciones por CONSECUTIVO"
                 )
                 fig_combined.update_layout(xaxis=dict(tickmode='array', tickvals=plot_data["FECHA"].unique()))
                 st.plotly_chart(fig_combined)
