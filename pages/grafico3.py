@@ -11,7 +11,7 @@ import plotly.express as px
 import os
 
 # Título de la aplicación
-st.title("Visualización de Resultados de las AFORE")
+st.title("Visualización de Resultados")
 
 # Ruta del archivo predeterminado
 default_file = "resultados.xlsx"
