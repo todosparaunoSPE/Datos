@@ -35,7 +35,7 @@ if uploaded_file is not None:
         df.columns = df.columns.str.upper()  # Convertir a mayúsculas para evitar discrepancias
 
         # Verificar si las columnas requeridas están presentes
-        required_columns = ["AFORE", "FECHA", "VALOR_REAL", "PROYECCION"]
+        required_columns = ["CONSECUTIVO", "FECHA", "VALOR_REAL", "PROYECCION"]
         if all(col in df.columns for col in required_columns):
             # Convertir la columna de fechas a tipo datetime si es necesario
             df["FECHA"] = pd.to_datetime(df["FECHA"])
